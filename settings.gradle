@@ -13,4 +13,4 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "StopScrollApp"
-include(":app")
+include ':app'
