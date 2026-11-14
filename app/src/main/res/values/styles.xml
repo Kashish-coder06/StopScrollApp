@@ -1,0 +1,13 @@
+<resources>
+    <style name="Theme.StopScroll" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:colorPrimary">@color/pink_primary</item>
+        <item name="android:colorPrimaryDark">@color/pink_dark</item>
+        <item name="android:colorAccent">@color/pink_accent</item>
+        <item name="android:windowBackground">@color/pink_soft</item>
+    </style>
+
+    <style name="Theme.StopScroll.Fullscreen" parent="Theme.StopScroll">
+        <item name="android:windowIsTranslucent">false</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
+</resources>

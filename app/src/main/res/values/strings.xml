@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">StopScroll</string>
+    <string name="accessibility_service_description">StopScroll monitors short-video scrolling (Reels and Shorts) to help you control watch limits and lock feeds when the limit is reached.</string>
+
+    <color name="pink_primary">#E91E63</color>
+    <color name="pink_accent">#FF4081</color>
+    <color name="pink_soft">#FFF0F3</color>
+    <color name="pink_dark">#C2185B</color>
+    <color name="white">#FFFFFF</color>
+    <color name="text_dark">#212121</color>
+    <color name="text_muted">#757575</color>
+</resources>

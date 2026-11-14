@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StopScroll - Interactive Simulator</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background: #18191f;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+      color: #333;
+    }
+
+    .header-bar {
+      color: #fff;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .header-bar h1 {
+      font-size: 26px;
+      color: #ff6b8b;
+    }
+    .header-bar p {
+      font-size: 14px;
+      color: #aaa;
+    }
+
+    .main-stage {
+      display: flex;
+      gap: 30px;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    /* Phone Shell */
+    .phone {
+      width: 360px;
+      height: 720px;
+      background: #000;
+      border-radius: 44px;
+      border: 8px solid #333;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.6);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .notch {
+      width: 140px;
+      height: 24px;
+      background: #222;
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      border-bottom-left-radius: 16px;
+      border-bottom-right-radius: 16px;
+      z-index: 1000;
+    }
+
+    .screen-content {
+      flex: 1;
+      position: relative;
+      background: #fff;
+      overflow: hidden;
+    }
+
+    /* Screen 1: App Settings (Dashboard) */
+    .screen-app {
+      width: 100%;
+      height: 100%;
+      background: #FFF0F3;
+      padding: 48px 24px 20px 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-sizing: border-box;
+      position: absolute;
+      top: 0;
+      left: 0;
+      transition: transform 0.3s ease;
+      z-index: 10;
+    }
+
+    .avatar-header {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+      margin-bottom: 10px;
+      background: #fff;
+      border: 3px solid #ff80ab;
+    }
+
+    .title-banner {
+      text-align: center;
+      margin-bottom: 16px;
+    }
+    .title-banner h2 {
+      font-size: 22px;
+      color: #E91E63;
+      font-weight: 800;
+    }
+    .title-banner p {
+      font-size: 13px;
+      color: #C2185B;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 24px;
+      padding: 22px 18px;
+      width: 100%;
+      text-align: center;
+      border: 2px solid #FF80AB;
+      box-shadow: 0 8px 20px rgba(233, 30, 99, 0.12);
+    }
+    .card h3 {
+      font-size: 16px;
+      color: #333;
+    }
+    .card-subtitle {
+      font-size: 12px;
+      color: #888;
+      margin-top: 4px;
+    }
+    .limit-value {
+      font-size: 34px;
+      font-weight: 800;
+      color: #E91E63;
+      margin: 12px 0;
+    }
+    .stepper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+    }
+    .step-btn {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      border: none;
+      background: #FFF0F3;
+      color: #E91E63;
+      font-size: 22px;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 10px rgba(233, 30, 99, 0.15);
+    }
+    .step-btn:active {
+      transform: scale(0.92);
+    }
+    .btn-pink {
+      width: 100%;
+      height: 46px;
+      border-radius: 24px;
+      border: none;
+      background: #E91E63;
+      color: #fff;
+      font-size: 15px;
+      font-weight: bold;
+      margin-top: 16px;
+      cursor: pointer;
+      box-shadow: 0 6px 16px rgba(233, 30, 99, 0.3);
+    }
+    .btn-pink:active {
+      transform: scale(0.98);
+    }
+
+    .info-box {
+      margin-top: 16px;
+      background: #fff;
+      border-radius: 16px;
+      padding: 12px 16px;
+      width: 100%;
+      font-size: 11px;
+      color: #666;
+    }
+
+    /* Screen 2: Instagram Reel Feed Simulation */
+    .screen-feed {
+      width: 100%;
+      height: 100%;
+      background: #111;
+      position: absolute;
+      top: 0;
+      left: 0;
+      display: flex;
+      flex-direction: column;
+      z-index: 5;
+    }
+
+    .feed-container {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .reel-slide {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 24px 16px 36px 16px;
+      color: #fff;
+      transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    .reel-1 { background: linear-gradient(180deg, #ff758c 0%, #ff7eb3 100%); }
+    .reel-author {
+      font-weight: bold;
+      font-size: 15px;
+      margin-bottom: 6px;
+    }
+    .reel-desc {
+      font-size: 13px;
+      opacity: 0.92;
+      margin-bottom: 12px;
+      line-height: 1.4;
+    }
+
+    .actions-bar {
+      position: absolute;
+      right: 12px;
+      bottom: 70px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      align-items: center;
+    }
+    .action-icon {
+      font-size: 22px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    }
+
+    /* Floating Counter Overlay with Mascot & Dynamic Colors */
+    .floating-overlay {
+      position: absolute;
+      top: 36px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255, 255, 255, 0.98);
+      border: 3px solid #4A90E2;
+      border-radius: 28px;
+      padding: 5px 16px 5px 8px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.35);
+      z-index: 100;
+      cursor: grab;
+      user-select: none;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: border-color 0.4s ease, box-shadow 0.4s ease;
+    }
+
+    .mascot-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .overlay-text-group {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.1;
+    }
+
+    .overlay-status {
+      font-size: 10px;
+      font-weight: 700;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .overlay-counter {
+      font-size: 17px;
+      font-weight: 800;
+      color: #4A90E2;
+      transition: color 0.4s ease;
+    }
+
+    /* Screen 3: Lock Screen */
+    .screen-lock {
+      width: 100%;
+      height: 100%;
+      background: #FFFFFF;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 200;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 30px;
+      text-align: center;
+    }
+    .screen-lock.active {
+      display: flex;
+      animation: popIn 0.3s ease-out;
+    }
+
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .lock-alarm {
+      font-size: 72px;
+      margin-bottom: 12px;
+    }
+    .lock-title {
+      font-size: 26px;
+      font-weight: 800;
+      color: #E91E63;
+    }
+    .lock-sub {
+      font-size: 14px;
+      color: #777;
+      margin-top: 8px;
+      line-height: 1.4;
+    }
+    .btn-home {
+      width: 100%;
+      height: 52px;
+      background: #E91E63;
+      border: none;
+      border-radius: 26px;
+      color: #fff;
+      font-size: 16px;
+      font-weight: bold;
+      margin-top: 26px;
+      cursor: pointer;
+    }
+
+    /* Simulator Controls on Right */
+    .control-panel {
+      width: 330px;
+      background: #24252f;
+      border-radius: 20px;
+      padding: 24px;
+      color: #eee;
+    }
+    .control-panel h3 {
+      font-size: 18px;
+      margin-bottom: 12px;
+      color: #ff6b8b;
+    }
+    .control-panel p {
+      font-size: 13px;
+      color: #aaa;
+      line-height: 1.5;
+      margin-bottom: 18px;
+    }
+    .panel-btn {
+      width: 100%;
+      padding: 13px;
+      border-radius: 12px;
+      border: none;
+      font-weight: bold;
+      font-size: 14px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .panel-btn:active {
+      transform: scale(0.98);
+    }
+    .btn-scroll {
+      background: linear-gradient(135deg, #ff6b8b, #ff8e53);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(255, 107, 139, 0.4);
+    }
+    .btn-toggle-app {
+      background: #3a3b47;
+      color: #fff;
+    }
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: bold;
+      background: #00b894;
+      color: #fff;
+      margin-bottom: 12px;
+    }
+
+    .color-preview-bar {
+      display: flex;
+      gap: 6px;
+      margin-top: 14px;
+      margin-bottom: 8px;
+    }
+    .color-dot {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header-bar">
+    <h1>🎬 StopScroll Simulator (Live Dynamic Colors + Mascot)</h1>
+    <p>Scroll karne par counter ka color badalta hai aur avatar jump karta hai!</p>
+  </div>
+
+  <div class="main-stage">
+    
+    <!-- Phone Mockup -->
+    <div class="phone">
+      <div class="notch"></div>
+
+      <div class="screen-content">
+
+        <!-- App Settings Screen (StopScroll) -->
+        <div class="screen-app" id="screenApp">
+          <img src="cute_avatar.png" alt="Mascot" class="avatar-header">
+          <div class="title-banner">
+            <h2>Reel Scroll Limiter</h2>
+            <p>Scroll Smart, Live Better ❤️</p>
+          </div>
+
+          <div class="card">
+            <h3>Set Daily Limit</h3>
+            <p class="card-subtitle">How many Reels do you want to watch today?</p>
+            <div class="limit-value" id="limitDisplay">6 / day</div>
+
+            <div class="stepper">
+              <button class="step-btn" id="btnDec">-</button>
+              <span style="font-size: 24px;">⏳</span>
+              <button class="step-btn" id="btnInc">+</button>
+            </div>
+
+            <button class="btn-pink" id="btnSave">Save & Open Reels</button>
+          </div>
+
+          <div class="info-box">
+            <p><strong>Status:</strong></p>
+            <p style="color: #2e7d32; margin-top: 4px;">✅ Floating Mascot Overlay Active</p>
+            <p style="color: #2e7d32; margin-top: 2px;">✅ Dynamic Color-Shifting Enabled</p>
+          </div>
+        </div>
+
+        <!-- Reel Feed (Instagram Simulation) -->
+        <div class="screen-feed" id="screenFeed">
+          
+          <!-- Floating WindowManager Overlay with Mascot & Dynamic Border/Color -->
+          <div class="floating-overlay" id="floatingOverlay">
+            <img src="cute_avatar.png" alt="Avatar" class="mascot-icon" id="mascotIcon">
+            <div class="overlay-text-group">
+              <span class="overlay-status" id="overlayStatus">Reel #0</span>
+              <span class="overlay-counter" id="overlayCounter">0 / 6</span>
+            </div>
+          </div>
+
+          <div class="feed-container" id="feedClickArea">
+            <div class="reel-slide reel-1" id="reelSlide">
+              <div class="reel-author">@aesthetic_feed</div>
+              <div class="reel-desc">Swipe up or click screen to scroll to the next reel! Watch the counter change color ✨</div>
+            </div>
+
+            <div class="actions-bar">
+              <div class="action-icon">❤️</div>
+              <div class="action-icon">💬</div>
+              <div class="action-icon">✈️</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Lock Screen Simulation -->
+        <div class="screen-lock" id="screenLock">
+          <img src="cute_avatar.png" alt="Mascot" style="width: 70px; height: 70px; border-radius: 50%; margin-bottom: 10px;">
+          <div class="lock-alarm">⏰</div>
+          <div class="lock-title">Time's Up!</div>
+          <div class="lock-sub" id="lockSubText">You've reached your daily limit of 6 reels. Take a break!</div>
+          <button class="btn-home" id="btnHome">Go Back Home</button>
+          <p style="font-size: 11px; color: #aaa; margin-top: 14px;">📅 Resets tomorrow at 00:00</p>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Simulator Control Panel -->
+    <div class="control-panel">
+      <span class="badge">INTERACTIVE CONTROLS</span>
+      <h3>Supervisor & Demo Controls</h3>
+      <p>Scroll karne par header counter ka color change hoga aur cute avatar bounce karega:</p>
+
+      <button class="panel-btn btn-scroll" id="ctrlScroll">👇 Scroll Next Reel (Count & Color Change)</button>
+      <button class="panel-btn btn-toggle-app" id="ctrlToggle">📱 Switch App (Settings &harr; Reels)</button>
+      <button class="panel-btn" id="ctrlReset" style="background: #e74c3c; color: white;">🔄 Reset Counter</button>
+
+      <div style="margin-top: 18px; border-top: 1px solid #3a3b47; padding-top: 14px;">
+        <p style="font-size: 12px; color: #bbb; margin-bottom: 6px;"><strong>Dynamic Scroll Color Sequence:</strong></p>
+        <div class="color-preview-bar">
+          <div class="color-dot" style="background: #4A90E2;"></div>
+          <div class="color-dot" style="background: #50E3C2;"></div>
+          <div class="color-dot" style="background: #7ED321;"></div>
+          <div class="color-dot" style="background: #F5A623;"></div>
+          <div class="color-dot" style="background: #FF6B8B;"></div>
+          <div class="color-dot" style="background: #BD10E0;"></div>
+          <div class="color-dot" style="background: #D0021B;"></div>
+        </div>
+        <p style="font-size: 11px; color: #888;">Border + Text dynamically shifts on every swipe and flashes RED near the limit.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    let limit = 6;
+    let currentCount = 0;
+    
+    // Dynamic color sequence for scroll count
+    const dynamicPalette = [
+      '#4A90E2', // Sky Blue (matching mascot)
+      '#50E3C2', // Mint Teal
+      '#7ED321', // Lime Green
+      '#F5A623', // Bright Orange
+      '#FF6B8B', // Pastel Rose
+      '#BD10E0', // Neon Violet
+      '#E91E63', // Hot Magenta
+      '#D0021B'  // Critical Red
+    ];
+
+    const gradients = [
+      'linear-gradient(180deg, #ff758c 0%, #ff7eb3 100%)',
+      'linear-gradient(180deg, #4e54c8 0%, #8f94fb 100%)',
+      'linear-gradient(180deg, #11998e 0%, #38ef7d 100%)',
+      'linear-gradient(180deg, #fc4a1a 0%, #f7b733 100%)',
+      'linear-gradient(180deg, #8A2387 0%, #E94057 50%, #F27121 100%)',
+      'linear-gradient(180deg, #00c6ff 0%, #0072ff 100%)'
+    ];
+    let reelIndex = 0;
+
+    const screenApp = document.getElementById('screenApp');
+    const screenFeed = document.getElementById('screenFeed');
+    const screenLock = document.getElementById('screenLock');
+    const limitDisplay = document.getElementById('limitDisplay');
+    const overlayCounter = document.getElementById('overlayCounter');
+    const overlayStatus = document.getElementById('overlayStatus');
+    const lockSubText = document.getElementById('lockSubText');
+    const reelSlide = document.getElementById('reelSlide');
+    const floatingOverlay = document.getElementById('floatingOverlay');
+    const mascotIcon = document.getElementById('mascotIcon');
+
+    function getCurrentColor() {
+      if (currentCount >= limit * 0.85) {
+        return '#D0021B'; // Red alert near limit
+      }
+      return dynamicPalette[currentCount % (dynamicPalette.length - 1)];
+    }
+
+    function updateDisplay() {
+      const activeColor = getCurrentColor();
+
+      limitDisplay.innerText = `${limit} / day`;
+      overlayCounter.innerText = `${currentCount} / ${limit}`;
+      overlayCounter.style.color = activeColor;
+      
+      // Update dynamic border color and glow
+      floatingOverlay.style.borderColor = activeColor;
+      floatingOverlay.style.boxShadow = `0 6px 20px ${activeColor}55`;
+
+      if (currentCount >= limit * 0.85) {
+        overlayStatus.innerText = '⚠️ LIMIT CLOSE!';
+        overlayStatus.style.color = '#D0021B';
+      } else {
+        overlayStatus.innerText = `Reel #${currentCount}`;
+        overlayStatus.style.color = '#666';
+      }
+
+      lockSubText.innerText = `You've reached your daily limit of ${limit} reels. Take a break!`;
+    }
+
+    document.getElementById('btnInc').addEventListener('click', () => {
+      limit += 1;
+      updateDisplay();
+    });
+
+    document.getElementById('btnDec').addEventListener('click', () => {
+      if (limit > 1) {
+        limit -= 1;
+        updateDisplay();
+      }
+    });
+
+    document.getElementById('btnSave').addEventListener('click', () => {
+      screenApp.style.transform = 'translateY(-100%)';
+      updateDisplay();
+    });
+
+    document.getElementById('ctrlToggle').addEventListener('click', () => {
+      if (screenApp.style.transform === 'translateY(-100%)') {
+        screenApp.style.transform = 'translateY(0%)';
+      } else {
+        screenApp.style.transform = 'translateY(-100%)';
+      }
+    });
+
+    function scrollReel() {
+      if (currentCount >= limit) return;
+
+      currentCount++;
+      reelIndex = (reelIndex + 1) % gradients.length;
+      
+      // Mascot bounce animation
+      mascotIcon.style.transform = 'scale(1.35) rotate(-10deg)';
+      setTimeout(() => {
+        mascotIcon.style.transform = 'scale(1.0) rotate(0deg)';
+      }, 200);
+
+      // Slide transition
+      reelSlide.style.transform = 'translateY(-100%)';
+      setTimeout(() => {
+        reelSlide.style.background = gradients[reelIndex];
+        reelSlide.style.transform = 'translateY(0%)';
+      }, 200);
+
+      updateDisplay();
+
+      if (currentCount >= limit) {
+        setTimeout(() => {
+          screenLock.classList.add('active');
+        }, 500);
+      }
+    }
+
+    document.getElementById('ctrlScroll').addEventListener('click', scrollReel);
+    document.getElementById('feedClickArea').addEventListener('click', scrollReel);
+
+    document.getElementById('btnHome').addEventListener('click', () => {
+      screenLock.classList.remove('active');
+      screenApp.style.transform = 'translateY(0%)';
+    });
+
+    document.getElementById('ctrlReset').addEventListener('click', () => {
+      currentCount = 0;
+      screenLock.classList.remove('active');
+      updateDisplay();
+    });
+
+    // Make floating overlay draggable
+    const overlay = document.getElementById('floatingOverlay');
+    let isDragging = false;
+    let offset = [0, 0];
+
+    overlay.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      offset = [overlay.offsetLeft - e.clientX, overlay.offsetTop - e.clientY];
+    });
+
+    document.addEventListener('mouseup', () => isDragging = false);
+    document.addEventListener('mousemove', (e) => {
+      if (isDragging) {
+        overlay.style.left = (e.clientX + offset[0]) + 'px';
+        overlay.style.top = (e.clientY + offset[1]) + 'px';
+        overlay.style.transform = 'none';
+      }
+    });
+
+    updateDisplay();
+  </script>
+</body>
+</html>
