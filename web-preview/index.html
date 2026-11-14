@@ -13,7 +13,7 @@
     }
 
     body {
-      background: #18191f;
+      background: #14151a;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -75,15 +75,16 @@
       flex: 1;
       position: relative;
       background: #fff;
-      overflow: hidden;
+      overflow-y: auto;
+      overflow-x: hidden;
     }
 
     /* Screen 1: App Settings (Dashboard) */
     .screen-app {
       width: 100%;
-      height: 100%;
+      min-height: 100%;
       background: #FFF0F3;
-      padding: 48px 24px 20px 24px;
+      padding: 42px 20px 20px 20px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -96,67 +97,68 @@
     }
 
     .avatar-header {
-      width: 72px;
-      height: 72px;
+      width: 68px;
+      height: 68px;
       border-radius: 50%;
       box-shadow: 0 6px 18px rgba(0,0,0,0.15);
-      margin-bottom: 10px;
+      margin-bottom: 6px;
       background: #fff;
       border: 3px solid #ff80ab;
+      transition: filter 0.4s ease, transform 0.2s ease;
     }
 
     .title-banner {
       text-align: center;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
     .title-banner h2 {
-      font-size: 22px;
+      font-size: 20px;
       color: #E91E63;
       font-weight: 800;
     }
     .title-banner p {
-      font-size: 13px;
+      font-size: 12px;
       color: #C2185B;
     }
 
     .card {
       background: #fff;
-      border-radius: 24px;
-      padding: 22px 18px;
+      border-radius: 20px;
+      padding: 18px 16px;
       width: 100%;
       text-align: center;
       border: 2px solid #FF80AB;
       box-shadow: 0 8px 20px rgba(233, 30, 99, 0.12);
     }
     .card h3 {
-      font-size: 16px;
+      font-size: 15px;
       color: #333;
     }
     .card-subtitle {
-      font-size: 12px;
+      font-size: 11px;
       color: #888;
-      margin-top: 4px;
+      margin-top: 2px;
     }
     .limit-value {
-      font-size: 34px;
+      font-size: 32px;
       font-weight: 800;
       color: #E91E63;
-      margin: 12px 0;
+      margin: 10px 0;
     }
     .stepper {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 16px;
+      gap: 14px;
     }
     .step-btn {
-      width: 46px;
-      height: 46px;
+      width: 42px;
+      height: 42px;
       border-radius: 50%;
       border: none;
       background: #FFF0F3;
       color: #E91E63;
-      font-size: 22px;
+      font-size: 20px;
       font-weight: bold;
       cursor: pointer;
       display: flex;
@@ -167,32 +169,43 @@
     .step-btn:active {
       transform: scale(0.92);
     }
-    .btn-pink {
-      width: 100%;
-      height: 46px;
-      border-radius: 24px;
-      border: none;
-      background: #E91E63;
-      color: #fff;
-      font-size: 15px;
-      font-weight: bold;
-      margin-top: 16px;
-      cursor: pointer;
-      box-shadow: 0 6px 16px rgba(233, 30, 99, 0.3);
-    }
-    .btn-pink:active {
-      transform: scale(0.98);
-    }
 
-    .info-box {
-      margin-top: 16px;
-      background: #fff;
-      border-radius: 16px;
-      padding: 12px 16px;
+    /* Direct App Launcher Buttons */
+    .apps-card {
       width: 100%;
-      font-size: 11px;
-      color: #666;
+      background: #fff;
+      border-radius: 18px;
+      padding: 16px;
+      margin-top: 14px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.06);
     }
+    .apps-card h4 {
+      font-size: 13px;
+      color: #444;
+      margin-bottom: 8px;
+    }
+    .app-link-btn {
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: 12px;
+      border: none;
+      color: #fff;
+      font-size: 13px;
+      font-weight: bold;
+      margin-bottom: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: transform 0.1s ease;
+    }
+    .app-link-btn:active {
+      transform: scale(0.97);
+    }
+    .btn-ig { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
+    .btn-yt { background: #FF0000; }
+    .btn-tt { background: #000000; }
 
     /* Screen 2: Instagram Reel Feed Simulation */
     .screen-feed {
@@ -272,14 +285,25 @@
       display: flex;
       align-items: center;
       gap: 10px;
-      transition: border-color 0.4s ease, box-shadow 0.4s ease;
+      transition: border-color 0.4s ease, box-shadow 0.4s ease, background 0.4s ease;
     }
 
     .mascot-icon {
       width: 38px;
       height: 38px;
       border-radius: 50%;
-      transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.4s ease;
+    }
+
+    /* Red Angry Face Filter */
+    .mascot-red-angry {
+      filter: sepia(1) saturate(10000%) hue-rotate(330deg) brightness(0.9) contrast(1.2) !important;
+      animation: angryShake 0.4s infinite alternate;
+    }
+
+    @keyframes angryShake {
+      0% { transform: scale(1.1) rotate(-5deg); }
+      100% { transform: scale(1.1) rotate(5deg); }
     }
 
     .overlay-text-group {
@@ -330,8 +354,8 @@
     }
 
     .lock-alarm {
-      font-size: 72px;
-      margin-bottom: 12px;
+      font-size: 64px;
+      margin-bottom: 10px;
     }
     .lock-title {
       font-size: 26px;
@@ -346,14 +370,14 @@
     }
     .btn-home {
       width: 100%;
-      height: 52px;
+      height: 50px;
       background: #E91E63;
       border: none;
-      border-radius: 26px;
+      border-radius: 25px;
       color: #fff;
       font-size: 16px;
       font-weight: bold;
-      margin-top: 26px;
+      margin-top: 24px;
       cursor: pointer;
     }
 
@@ -362,23 +386,23 @@
       width: 330px;
       background: #24252f;
       border-radius: 20px;
-      padding: 24px;
+      padding: 22px;
       color: #eee;
     }
     .control-panel h3 {
       font-size: 18px;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
       color: #ff6b8b;
     }
     .control-panel p {
       font-size: 13px;
       color: #aaa;
-      line-height: 1.5;
-      margin-bottom: 18px;
+      line-height: 1.4;
+      margin-bottom: 16px;
     }
     .panel-btn {
       width: 100%;
-      padding: 13px;
+      padding: 12px;
       border-radius: 12px;
       border: none;
       font-weight: bold;
@@ -407,28 +431,15 @@
       font-weight: bold;
       background: #00b894;
       color: #fff;
-      margin-bottom: 12px;
-    }
-
-    .color-preview-bar {
-      display: flex;
-      gap: 6px;
-      margin-top: 14px;
-      margin-bottom: 8px;
-    }
-    .color-dot {
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      border: 1px solid rgba(255,255,255,0.2);
+      margin-bottom: 10px;
     }
   </style>
 </head>
 <body>
 
   <div class="header-bar">
-    <h1>🎬 StopScroll Simulator (Live Dynamic Colors + Mascot)</h1>
-    <p>Scroll karne par counter ka color badalta hai aur avatar jump karta hai!</p>
+    <h1>🎬 StopScroll Simulator (Angry Red Face & Direct App Launchers)</h1>
+    <p>Limit khatm hote hi emoji ka chehra laal ho jata hai aur direct Instagram/YouTube khulta hai!</p>
   </div>
 
   <div class="main-stage">
@@ -441,7 +452,7 @@
 
         <!-- App Settings Screen (StopScroll) -->
         <div class="screen-app" id="screenApp">
-          <img src="cute_avatar.png" alt="Mascot" class="avatar-header">
+          <img src="cute_avatar.png" alt="Mascot" class="avatar-header" id="dashMascot">
           <div class="title-banner">
             <h2>Reel Scroll Limiter</h2>
             <p>Scroll Smart, Live Better ❤️</p>
@@ -450,21 +461,21 @@
           <div class="card">
             <h3>Set Daily Limit</h3>
             <p class="card-subtitle">How many Reels do you want to watch today?</p>
-            <div class="limit-value" id="limitDisplay">6 / day</div>
+            <div class="limit-value" id="limitDisplay">5 / day</div>
 
             <div class="stepper">
               <button class="step-btn" id="btnDec">-</button>
               <span style="font-size: 24px;">⏳</span>
               <button class="step-btn" id="btnInc">+</button>
             </div>
-
-            <button class="btn-pink" id="btnSave">Save & Open Reels</button>
           </div>
 
-          <div class="info-box">
-            <p><strong>Status:</strong></p>
-            <p style="color: #2e7d32; margin-top: 4px;">✅ Floating Mascot Overlay Active</p>
-            <p style="color: #2e7d32; margin-top: 2px;">✅ Dynamic Color-Shifting Enabled</p>
+          <!-- Direct Apps Launch Section -->
+          <div class="apps-card">
+            <h4>Direct Link to Reel Apps:</h4>
+            <button class="app-link-btn btn-ig" id="btnOpenIG">📸 Open Instagram Reels</button>
+            <button class="app-link-btn btn-yt" id="btnOpenYT">▶️ Open YouTube Shorts</button>
+            <button class="app-link-btn btn-tt" id="btnOpenTT">🎵 Open TikTok Feed</button>
           </div>
         </div>
 
@@ -476,14 +487,14 @@
             <img src="cute_avatar.png" alt="Avatar" class="mascot-icon" id="mascotIcon">
             <div class="overlay-text-group">
               <span class="overlay-status" id="overlayStatus">Reel #0</span>
-              <span class="overlay-counter" id="overlayCounter">0 / 6</span>
+              <span class="overlay-counter" id="overlayCounter">0 / 5</span>
             </div>
           </div>
 
           <div class="feed-container" id="feedClickArea">
             <div class="reel-slide reel-1" id="reelSlide">
-              <div class="reel-author">@aesthetic_feed</div>
-              <div class="reel-desc">Swipe up or click screen to scroll to the next reel! Watch the counter change color ✨</div>
+              <div class="reel-author" id="activeAppTitle">@instagram_reels</div>
+              <div class="reel-desc">Swipe up or click screen to scroll to the next reel! Limit over hote hi mascot RED ho jayega 😡</div>
             </div>
 
             <div class="actions-bar">
@@ -496,10 +507,10 @@
 
         <!-- Lock Screen Simulation -->
         <div class="screen-lock" id="screenLock">
-          <img src="cute_avatar.png" alt="Mascot" style="width: 70px; height: 70px; border-radius: 50%; margin-bottom: 10px;">
+          <img src="cute_avatar.png" alt="Mascot" class="mascot-red-angry" id="lockMascot" style="width: 72px; height: 72px; border-radius: 50%; margin-bottom: 8px;">
           <div class="lock-alarm">⏰</div>
           <div class="lock-title">Time's Up!</div>
-          <div class="lock-sub" id="lockSubText">You've reached your daily limit of 6 reels. Take a break!</div>
+          <div class="lock-sub" id="lockSubText">You've reached your daily limit of 5 reels. Take a break!</div>
           <button class="btn-home" id="btnHome">Go Back Home</button>
           <p style="font-size: 11px; color: #aaa; margin-top: 14px;">📅 Resets tomorrow at 00:00</p>
         </div>
@@ -509,45 +520,38 @@
 
     <!-- Simulator Control Panel -->
     <div class="control-panel">
-      <span class="badge">INTERACTIVE CONTROLS</span>
+      <span class="badge">TEST CONTROLS</span>
       <h3>Supervisor & Demo Controls</h3>
-      <p>Scroll karne par header counter ka color change hoga aur cute avatar bounce karega:</p>
+      <p>Scroll karne par counter color badlega, aur limit khatam hone par face RED ho jayega:</p>
 
-      <button class="panel-btn btn-scroll" id="ctrlScroll">👇 Scroll Next Reel (Count & Color Change)</button>
+      <button class="panel-btn btn-scroll" id="ctrlScroll">👇 Scroll Next Reel (Count & Shift Color)</button>
       <button class="panel-btn btn-toggle-app" id="ctrlToggle">📱 Switch App (Settings &harr; Reels)</button>
       <button class="panel-btn" id="ctrlReset" style="background: #e74c3c; color: white;">🔄 Reset Counter</button>
 
       <div style="margin-top: 18px; border-top: 1px solid #3a3b47; padding-top: 14px;">
-        <p style="font-size: 12px; color: #bbb; margin-bottom: 6px;"><strong>Dynamic Scroll Color Sequence:</strong></p>
-        <div class="color-preview-bar">
-          <div class="color-dot" style="background: #4A90E2;"></div>
-          <div class="color-dot" style="background: #50E3C2;"></div>
-          <div class="color-dot" style="background: #7ED321;"></div>
-          <div class="color-dot" style="background: #F5A623;"></div>
-          <div class="color-dot" style="background: #FF6B8B;"></div>
-          <div class="color-dot" style="background: #BD10E0;"></div>
-          <div class="color-dot" style="background: #D0021B;"></div>
-        </div>
-        <p style="font-size: 11px; color: #888;">Border + Text dynamically shifts on every swipe and flashes RED near the limit.</p>
+        <p style="font-size: 12px; color: #bbb; margin-bottom: 6px;"><strong>Features verified:</strong></p>
+        <ul style="padding-left: 16px; font-size: 12px; color: #aaa; line-height: 1.5;">
+          <li>📸 Direct links to Instagram Reels, YouTube Shorts, & TikTok.</li>
+          <li>😡 Emoji turns <strong>RED & Angry</strong> with shake vibration as soon as limit is reached!</li>
+          <li>🎨 Smooth border & text color gradient cycling on each swipe.</li>
+        </ul>
       </div>
     </div>
 
   </div>
 
   <script>
-    let limit = 6;
+    let limit = 5;
     let currentCount = 0;
     
-    // Dynamic color sequence for scroll count
     const dynamicPalette = [
-      '#4A90E2', // Sky Blue (matching mascot)
+      '#4A90E2', // Sky Blue
       '#50E3C2', // Mint Teal
       '#7ED321', // Lime Green
       '#F5A623', // Bright Orange
       '#FF6B8B', // Pastel Rose
       '#BD10E0', // Neon Violet
-      '#E91E63', // Hot Magenta
-      '#D0021B'  // Critical Red
+      '#D0021B'  // Alert Red
     ];
 
     const gradients = [
@@ -555,8 +559,7 @@
       'linear-gradient(180deg, #4e54c8 0%, #8f94fb 100%)',
       'linear-gradient(180deg, #11998e 0%, #38ef7d 100%)',
       'linear-gradient(180deg, #fc4a1a 0%, #f7b733 100%)',
-      'linear-gradient(180deg, #8A2387 0%, #E94057 50%, #F27121 100%)',
-      'linear-gradient(180deg, #00c6ff 0%, #0072ff 100%)'
+      'linear-gradient(180deg, #8A2387 0%, #E94057 50%, #F27121 100%)'
     ];
     let reelIndex = 0;
 
@@ -570,31 +573,38 @@
     const reelSlide = document.getElementById('reelSlide');
     const floatingOverlay = document.getElementById('floatingOverlay');
     const mascotIcon = document.getElementById('mascotIcon');
+    const dashMascot = document.getElementById('dashMascot');
+    const activeAppTitle = document.getElementById('activeAppTitle');
 
     function getCurrentColor() {
-      if (currentCount >= limit * 0.85) {
-        return '#D0021B'; // Red alert near limit
+      if (currentCount >= limit) {
+        return '#D0021B'; // Red alert on limit reached
       }
       return dynamicPalette[currentCount % (dynamicPalette.length - 1)];
     }
 
     function updateDisplay() {
       const activeColor = getCurrentColor();
+      const isOver = currentCount >= limit;
 
       limitDisplay.innerText = `${limit} / day`;
       overlayCounter.innerText = `${currentCount} / ${limit}`;
       overlayCounter.style.color = activeColor;
       
-      // Update dynamic border color and glow
       floatingOverlay.style.borderColor = activeColor;
-      floatingOverlay.style.boxShadow = `0 6px 20px ${activeColor}55`;
+      floatingOverlay.style.boxShadow = `0 6px 20px ${activeColor}66`;
 
-      if (currentCount >= limit * 0.85) {
-        overlayStatus.innerText = '⚠️ LIMIT CLOSE!';
+      if (isOver) {
+        overlayStatus.innerText = '😡 LIMIT FINISHED!';
         overlayStatus.style.color = '#D0021B';
+        // Make emoji face RED and angry!
+        mascotIcon.classList.add('mascot-red-angry');
+        dashMascot.classList.add('mascot-red-angry');
       } else {
         overlayStatus.innerText = `Reel #${currentCount}`;
         overlayStatus.style.color = '#666';
+        mascotIcon.classList.remove('mascot-red-angry');
+        dashMascot.classList.remove('mascot-red-angry');
       }
 
       lockSubText.innerText = `You've reached your daily limit of ${limit} reels. Take a break!`;
@@ -612,10 +622,16 @@
       }
     });
 
-    document.getElementById('btnSave').addEventListener('click', () => {
+    // Direct App Launchers
+    function launchApp(name) {
+      activeAppTitle.innerText = `@${name}`;
       screenApp.style.transform = 'translateY(-100%)';
       updateDisplay();
-    });
+    }
+
+    document.getElementById('btnOpenIG').addEventListener('click', () => launchApp('instagram_reels'));
+    document.getElementById('btnOpenYT').addEventListener('click', () => launchApp('youtube_shorts'));
+    document.getElementById('btnOpenTT').addEventListener('click', () => launchApp('tiktok_foryou'));
 
     document.getElementById('ctrlToggle').addEventListener('click', () => {
       if (screenApp.style.transform === 'translateY(-100%)') {
@@ -632,10 +648,12 @@
       reelIndex = (reelIndex + 1) % gradients.length;
       
       // Mascot bounce animation
-      mascotIcon.style.transform = 'scale(1.35) rotate(-10deg)';
-      setTimeout(() => {
-        mascotIcon.style.transform = 'scale(1.0) rotate(0deg)';
-      }, 200);
+      if (currentCount < limit) {
+        mascotIcon.style.transform = 'scale(1.35) rotate(-10deg)';
+        setTimeout(() => {
+          mascotIcon.style.transform = 'scale(1.0) rotate(0deg)';
+        }, 200);
+      }
 
       // Slide transition
       reelSlide.style.transform = 'translateY(-100%)';
@@ -649,7 +667,7 @@
       if (currentCount >= limit) {
         setTimeout(() => {
           screenLock.classList.add('active');
-        }, 500);
+        }, 550);
       }
     }
 
@@ -664,6 +682,8 @@
     document.getElementById('ctrlReset').addEventListener('click', () => {
       currentCount = 0;
       screenLock.classList.remove('active');
+      mascotIcon.classList.remove('mascot-red-angry');
+      dashMascot.classList.remove('mascot-red-angry');
       updateDisplay();
     });
 

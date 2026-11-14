@@ -2,6 +2,8 @@ package com.gcuh.stopscroll
 
 import android.content.Context
 import android.graphics.Color
+import android.graphics.ColorMatrix
+import android.graphics.ColorMatrixColorFilter
 import android.graphics.PixelFormat
 import android.graphics.drawable.GradientDrawable
 import android.os.Build
@@ -22,14 +24,14 @@ class OverlayManager(private val context: Context) {
 
     // Palette of vibrant colors that cycle dynamically with each reel scroll
     private val cycleColors = listOf(
-        "#4A90E2", // Soft Sky Blue (matches mascot)
+        "#4A90E2", // Soft Sky Blue (normal state)
         "#50E3C2", // Mint Teal
         "#7ED321", // Fresh Green
         "#F5A623", // Warm Orange
         "#FF6B8B", // Rose Pink
         "#BD10E0", // Vibrant Violet
         "#E91E63", // Deep Magenta
-        "#D0021B"  // Alert Red (when limit is close)
+        "#D0021B"  // Alert Red
     )
 
     fun showOrUpdateOverlay(currentCount: Int, maxLimit: Int) {
@@ -55,7 +57,7 @@ class OverlayManager(private val context: Context) {
                 PixelFormat.TRANSLUCENT
             ).apply {
                 gravity = Gravity.TOP or Gravity.CENTER_HORIZONTAL
-                y = 80 // Positioned prominently near the top
+                y = 80
             }
 
             setupDragListener(overlayView!!, layoutParams!!)
@@ -68,9 +70,11 @@ class OverlayManager(private val context: Context) {
             }
         }
 
-        // 1. Calculate color based on scroll count
-        val colorHex = if (currentCount >= maxLimit * 0.85) {
-            "#D0021B" // Red alert when limit is 85%+ reached
+        val isLimitReachedOrNear = currentCount >= maxLimit
+
+        // 1. Color Selection
+        val colorHex = if (isLimitReachedOrNear) {
+            "#D0021B" // Red alert
         } else {
             cycleColors[currentCount % (cycleColors.size - 1)]
         }
@@ -81,8 +85,8 @@ class OverlayManager(private val context: Context) {
         val bgDrawable = GradientDrawable().apply {
             shape = GradientDrawable.RECTANGLE
             cornerRadius = 48f
-            setColor(Color.WHITE)
-            setStroke(5, dynamicColor) // Border dynamically changes color on each scroll!
+            setColor(if (isLimitReachedOrNear) Color.parseColor("#FFF0F0") else Color.WHITE)
+            setStroke(if (isLimitReachedOrNear) 8 else 5, dynamicColor)
         }
         container?.background = bgDrawable
 
@@ -93,19 +97,45 @@ class OverlayManager(private val context: Context) {
 
         // 4. Update status indicator
         val tvStatus = overlayView?.findViewById<TextView>(R.id.tvCounterStatus)
-        if (currentCount >= maxLimit * 0.85) {
-            tvStatus?.text = "⚠️ Limit Almost Hit!"
+        if (isLimitReachedOrNear) {
+            tvStatus?.text = "😡 LIMIT OVER!"
             tvStatus?.setTextColor(Color.parseColor("#D0021B"))
         } else {
             tvStatus?.text = "Reel #$currentCount"
             tvStatus?.setTextColor(Color.parseColor("#555555"))
         }
 
-        // 5. Mascot subtle bounce animation on increment
+        // 5. Mascot Emoji Face Color Change: Turn Red & Angry when limit is over!
         val ivMascot = overlayView?.findViewById<ImageView>(R.id.ivMascot)
-        ivMascot?.animate()?.scaleX(1.25f)?.scaleY(1.25f)?.setDuration(150)?.withEndAction {
-            ivMascot.animate().scaleX(1.0f).scaleY(1.0f).setDuration(150).start()
-        }?.start()
+        if (ivMascot != null) {
+            if (isLimitReachedOrNear) {
+                // Apply Red Heat Tint to emoji face
+                val redMatrix = ColorMatrix(floatArrayOf(
+                    2.0f, 0f, 0f, 0f, 60f,   // Red boost
+                    0.2f, 0.4f, 0f, 0f, 0f,  // Green damp
+                    0.2f, 0f, 0.3f, 0f, 0f,  // Blue damp
+                    0f, 0f, 0f, 1f, 0f       // Alpha
+                ))
+                ivMascot.colorFilter = ColorMatrixColorFilter(redMatrix)
+
+                // Shiver / Angry shake animation
+                ivMascot.animate()
+                    .translationXBy(10f)
+                    .setDuration(50)
+                    .withEndAction {
+                        ivMascot.animate().translationXBy(-20f).setDuration(50).withEndAction {
+                            ivMascot.animate().translationXBy(10f).setDuration(50).start()
+                        }.start()
+                    }.start()
+            } else {
+                // Normal happy face
+                ivMascot.colorFilter = null
+                // Happy bounce on scroll
+                ivMascot.animate().scaleX(1.3f).scaleY(1.3f).setDuration(140).withEndAction {
+                    ivMascot.animate().scaleX(1.0f).scaleY(1.0f).setDuration(140).start()
+                }.start()
+            }
+        }
     }
 
     fun hideOverlay() {
